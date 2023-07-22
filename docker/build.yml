@@ -1,0 +1,15 @@
+version: '2.4'
+services:
+  ros:
+    container_name: plane-inspection_ros_build
+    image: plane-inspection:noetic
+    build:
+      context: ..
+      dockerfile: docker/ros/Dockerfile
+  ros2:
+    container_name: plane-inspection_ros2_build
+    image: plane-inspection:humble
+    build:
+      context: ..
+      dockerfile: docker/ros2/Dockerfile
+      

@@ -1,0 +1,22 @@
+version: '2.4'
+services:
+  plane-inspection:
+    container_name: ros2-plane-inspection
+    image: plane-inspection:humble
+    runtime: nvidia
+    environment:
+      DISPLAY: $DISPLAY
+      ROS_DOMAIN_ID: $ROS_DOMAIN_ID
+      QT_X11_NO_MITSHM: '1'
+      NVIDIA_VISIBLE_DEVICES: all
+      NVIDIA_DRIVER_CAPABILITIES: compute,video,utility,graphics
+    network_mode: host
+    privileged: true
+    stdin_open: true
+    volumes:
+      - /dev/shm:/dev/shm
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - $HOME/.Xauthority:/root/.Xauthority
+      - ../../python:/root/python
+      - ../../ros2:/root/ros2_ws/src/ros2
+    command: tail -f /dev/null
