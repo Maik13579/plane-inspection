@@ -1,0 +1,33 @@
+#All values have defaults, so leave it empty if you dont know what you are doing ;)
+string base_footprint_frame #Frame name of robot link that is on the floor (usually base_footprint)
+
+#For filtering out floor, ceiling and other stuff like chairs
+float32 min_height
+float32 max_height
+
+#plane detection
+float32 distance_threshold
+float32 ransac_n
+float32 num_iterations
+float32 horizontal_threshold
+float32 plane_min_size_x
+float32 plane_min_size_y
+
+#DB Cluster
+float32 eps # Density parameter that is used to find neighbouring points.
+int32 min_points #Minimum number of points to form a cluster.
+
+
+---
+
+visualization_msgs/Marker plane #bounding box of plane only
+visualization_msgs/Marker plane_floor #bounding box extented to the floor
+visualization_msgs/Marker[] unkown_objects_bb
+visualization_msgs/Marker[] objects_bb
+
+#Plane equation a*x + b*y + c*z + d = 0
+float32 a
+float32 b
+float32 c
+float32 d
+
