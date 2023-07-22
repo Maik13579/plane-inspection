@@ -179,15 +179,15 @@ def detect_plane(cloud: o3d.geometry.PointCloud, distance_threshold: float=0.02,
         # Compute Bounding Boxes for each cluster
         # Return the first cluster where the scale fits the minimum size
         for cluster in clusters:
-            
-            # Bounding box extendet to the floor, good for moveit planning scene (if its a table for example))
-            bb_floor = compute_bb_on_plane(cluster.points, [0.0, 0.0, 1.0, 0.0])
 
             # Bounding box of the plane
             bb = compute_bb(cluster.points)
             
             # Check if the bounding box is large enough
             if bb.scale[0] > plane_min_size[0] and bb.scale[1] > plane_min_size[1]:
+                
+                # Bounding box extendet to the floor, good for moveit planning scene (if its a table for example))
+                bb_floor = compute_bb_on_plane(cluster.points, [0.0, 0.0, 1.0, 0.0])
                 return Plane(plane_model, bb, cluster), bb_floor
 
     return None
