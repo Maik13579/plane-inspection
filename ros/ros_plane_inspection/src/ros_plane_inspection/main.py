@@ -108,9 +108,6 @@ class PlaneInspection:
             rospy.loginfo('No pointcloud available!')
             return res
 
-        # Reset detected objects
-        self.detected_objects = {}
-
         # Initialize request parameters with provided values or defaults
         base_footprint = req.base_footprint_frame if req.base_footprint_frame != '' else FRAME
         min_height = req.min_height if req.min_height != 0.0 else 0.3
