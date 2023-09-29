@@ -95,7 +95,7 @@ class Plane:
         # Compute bounding boxes for each cluster
         print("compute bounding boxes for each cluster")
         plane_eq = self.get_plane_equation()
-        bbs = [compute_bb_on_plane(cluster.points, plane_eq) for cluster in clusters]
+        bbs = [compute_bb_on_plane(cluster.points, Plane(plane_eq, None, None)) for cluster in clusters]
 
         # Get x and y coordinates of the plane bb corners
         plane_x = [corner[0] for corner in self.bb.corner_points]
@@ -126,7 +126,7 @@ class Plane:
         o3d.geometry.PointCloud: Point cloud containing all points that are above the plane.
         """
         
-        points = cloud.points
+        points = np.asarray(cloud.points)
 
         # Select points above the plane
         condition = self.a * points[:, 0] + self.b * points[:, 1] + self.c * points[:, 2] + self.d > threshold
@@ -140,8 +140,8 @@ class Plane:
 
 
 def detect_plane(cloud: o3d.geometry.PointCloud, distance_threshold: float=0.02,
-                 ransac_n: int=3, num_iterations: int=1000, probability: float=0.99999999, horizontal_threshold: float=0.1,
-                 plane_min_size: Tuple[float, float]=(0.3, 0.3)) -> Union[Tuple[Plane, BoundingBox], None]:
+                 ransac_n: int=3, num_iterations: int=1000, horizontal_threshold: float=0.1,
+                 plane_min_size: Tuple[float, float]=(0.1, 0.1)) -> Union[Tuple[Plane, BoundingBox], None]:
     """
     Detect the largest horizontal plane in an Open3D point cloud.
 
@@ -161,7 +161,7 @@ def detect_plane(cloud: o3d.geometry.PointCloud, distance_threshold: float=0.02,
     while len(cloud.points) >= ransac_n:  # While there are enough points to compute a plane
 
         # Detect the largest plane in the cloud using open3d's RANSAC method
-        plane_model, index = cloud.segment_plane(distance_threshold, ransac_n, num_iterations, probability)
+        plane_model, index = cloud.segment_plane(distance_threshold, ransac_n, num_iterations)
         inlier_cloud = cloud.select_by_index(index)
         
         # Remove detected plane from cloud to avoid detecting the same plane again
@@ -187,7 +187,7 @@ def detect_plane(cloud: o3d.geometry.PointCloud, distance_threshold: float=0.02,
             if bb.scale[0] > plane_min_size[0] and bb.scale[1] > plane_min_size[1]:
 
                 # Bounding box extendet to the floor, good for moveit planning scene (if its a table for example))
-                bb_floor = compute_bb_on_plane(cluster.points, [0.0, 0.0, 1.0, 0.0])
+                bb_floor = compute_bb_on_plane(cluster.points, Plane([0.0, 0.0, 1.0, 0.0], None, None))
                 return Plane(plane_model, bb, cluster), bb_floor
 
     return None

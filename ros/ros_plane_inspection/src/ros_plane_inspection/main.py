@@ -22,7 +22,7 @@ from plane_inspection import detect_plane
 
 # Constants defining the frame and topic to subscribe to
 FRAME = 'base_footprint'
-POINTCLOUD_TOPIC = '/xtion/depth/points'
+POINTCLOUD_TOPIC = '/xtion/depth_registered/points'
 CAMERA_FRAME = 'xtion_rgb_optical_frame'
 CAMERA_INFO_TOPIC = '/xtion/rgb/camera_info'
 
